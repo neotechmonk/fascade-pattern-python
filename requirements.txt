@@ -1,0 +1,5 @@
+matplotlib==3.7.1
+mplfinance==0.12.9b7
+numpy==1.24.2
+yfinance==0.2.22
+ta
