@@ -9,4 +9,5 @@ Fascade hides low level implementation details from the usage
 
 
 ### Improvements Made
-1. 
+1. Separate `main.py` into `gui.py` and `main.py`
+2. seperate logic from `main.py` into `iot_controllers.py` by refactoring `display_status`(`get_status`)  and `toggle`(`power_speaker`) 
