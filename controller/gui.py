@@ -1,5 +1,6 @@
 import logging
 import tkinter as tk
+from typing import Callable
 
 from iot.devices import SmartSpeakerDevice
 from iot.service import IOTService
@@ -12,11 +13,13 @@ STATUS_UPDATE_TEXT = "Status Update"
 
 
 class SmartApp(tk.Tk):
-    def __init__(self) -> None:
+    def __init__(self, power_speaker_fn : Callable[[bool], None ], power_status_fn : Callable[[], str]) -> None:
         super().__init__()
         self.title("Smart App")
         self.geometry("400x250+300+300")
         self.speaker_on = False
+        self.power_speaker_fn = power_speaker_fn
+        self.power_status_fn = power_status_fn
 
         # create a IOT service
         self.service = IOTService()
@@ -39,44 +42,3 @@ class SmartApp(tk.Tk):
         self.get_status_button.pack()
         self.status_label.pack()
 
-    def toggle(self) -> None:
-        logging.info(f"Toggle speaker {self.speaker_id} with status {self.speaker_on}")
-
-        self.speaker_on = not self.speaker_on
-        self.toggle_button.config(text=ON_TEXT if self.speaker_on else OFF_TEXT)
-
-        # create a connection to the smart speaker
-        speaker_ip, speaker_port = self.service.get_device(
-            self.speaker_id
-        ).connection_info()
-        speaker_connection = Connection(speaker_ip, speaker_port)
-
-        # construct a message
-        message = Msg(
-            "SERVER", self.speaker_id, "switch_on" if self.speaker_on else "switch_off"
-        )
-
-        # send the message
-        speaker_connection.connect()
-        speaker_connection.send(message.b64)
-        speaker_connection.disconnect()
-
-        logging.info(f"Speaker {self.speaker_id} status: {self.speaker_on}")
-
-    def display_status(self) -> None:
-        logging.info(f"Display status for IOT devices.")
-        status = ""
-        for device_id, device in self.service.devices().items():
-            status += f"{device_id}: {device.status_update()}"
-        self.status_label.config(text=status)
-        logging.info(f"Status: {status}")
-
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    app = SmartApp()
-    app.mainloop()
-
-
-if __name__ == "__main__":
-    main()
