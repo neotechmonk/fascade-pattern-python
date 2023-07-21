@@ -11,5 +11,6 @@ Fascade hides low level implementation details from the usage
 ### Improvements Made
 1. Separate `main.py` into `gui.py` and `main.py`
 1. seperate logic from `main.py` into `iot_controllers.py` by refactoring `display_status`(`get_status`)  and `toggle`(`power_speaker`) 
-1. Change `SmartApp` contruction to get `get_status()` and `power_speaker()`
-1. Refactr controller related loggin from `gui.py`
+1. Change `SmartApp` contructor to get `get_status()` and `power_speaker()`
+1. Refactor controller related logging from `gui.py`
+1. Refactor `toggle()` and `display_status()` to use the `iot_controller.py` functions
