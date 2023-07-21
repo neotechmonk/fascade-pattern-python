@@ -1,9 +1,7 @@
-import logging
+
 import tkinter as tk
 from typing import Callable
 
-from iot.devices import SmartSpeakerDevice
-from iot.service import IOTService
 from message.helper import Message as Msg
 from network.connection import Connection
 
@@ -13,20 +11,15 @@ STATUS_UPDATE_TEXT = "Status Update"
 
 
 class SmartApp(tk.Tk):
-    def __init__(self, power_speaker_fn : Callable[[bool], None ], power_status_fn : Callable[[], str]) -> None:
+    def __init__(self, power_speaker_fn : Callable[[bool], None ], get_status_fn : Callable[[], str]) -> None:
         super().__init__()
         self.title("Smart App")
         self.geometry("400x250+300+300")
         self.speaker_on = False
         self.power_speaker_fn = power_speaker_fn
-        self.power_status_fn = power_status_fn
+        self.get_status_fn = get_status_fn
 
-        # create a IOT service
-        self.service = IOTService()
-
-        # create the smart speaker
-        smart_speaker = SmartSpeakerDevice()
-        self.speaker_id = self.service.register_device(smart_speaker)
+        
 
         self.create_ui()
 
@@ -41,4 +34,15 @@ class SmartApp(tk.Tk):
         self.toggle_button.pack()
         self.get_status_button.pack()
         self.status_label.pack()
+
+    def toggle(self) -> None:
+        self.speaker_on = not self.speaker_on
+        self.toggle_button.config(text=ON_TEXT if self.speaker_on else OFF_TEXT)
+        self.power_speaker_fn(self.speaker_on)
+
+
+    
+    def display_status(self) -> None: 
+        status =self.get_status_fn()
+        self.status_label.config(text=status)
 
