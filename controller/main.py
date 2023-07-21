@@ -14,9 +14,6 @@ def main():
     # create a IOT service
     service = IOTService()
 
-    # create the smart speaker
-    smart_speaker = SmartSpeakerDevice()
-    speaker_id = service.register_device(smart_speaker)
 
     power_speaker_fn = partial(power_speaker, service = service, speaker_id = speaker_id)
     get_status_fn= partial(get_status, service = service) 
