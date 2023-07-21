@@ -15,10 +15,10 @@ def main():
     service = IOTService()
 
     # create the fascade 
-    iot = IOTFascade(service)
+    iot_speaker = IOTFascade(service)
 
-    power_speaker_fn = partial(power_speaker, iot=iot)
-    get_status_fn= partial(get_status, iot=iot) 
+    power_speaker_fn = partial(power_speaker, iot=iot_speaker)
+    get_status_fn= partial(get_status, iot=iot_speaker) 
 
     app = SmartApp(power_speaker_fn, get_status_fn)
     app.mainloop()
